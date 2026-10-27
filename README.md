@@ -151,8 +151,53 @@ El trigger solicitado cambia el estado del salón a `Ocupado` al insertar cualqu
 - Versionar scripts y documentar cambios en Git.
 - Para despliegues reales, definir políticas de cancelación, reembolsos, zona horaria, facturación y retención de auditoría.
 
-## Autoría
+## Módulo 7: Pagos y facturación
 
-**Autor:** Nestor Santiago Cobos Manrique  
-**Proyecto:** Sistema de Reservas de Salones — Eventos Premier S.A.S.  
-**Tecnología:** MySQL 8.0+, SQL, InnoDB.
+El archivo `07_payment_reports.sql` incorpora las funcionalidades
+del módulo de pagos de Eventos Premier S.A.S.
+
+### Funcionalidades
+
+- `calcular_valor_pendiente`: calcula el saldo que falta por pagar.
+- `vista_facturacion_reservas`: consolida el total de la reserva,
+  los abonos registrados y el saldo pendiente.
+- `auditar_abono_insert_trigger`: registra los nuevos pagos.
+- `auditar_abono_update_trigger`: registra los cambios en los abonos.
+- Consulta de reservas pendientes de pago.
+- Consulta del top 3 de clientes con reservas completamente pagadas.
+- Historial de auditoría de abonos.
+
+### Ejemplos de ejecución
+
+```sql
+USE eventos_premier_db;
+
+-- Calcular un saldo pendiente.
+SELECT calcular_valor_pendiente(500000, 200000)
+AS valor_pendiente;
+
+-- Consultar reservas con saldo pendiente.
+SELECT *
+FROM vista_facturacion_reservas
+WHERE valor_pendiente > 0;
+
+-- Consultar los movimientos de auditoría.
+SELECT *
+FROM auditoria_abonos
+ORDER BY fecha_movimiento DESC;
+```
+
+### Instalación
+
+Ejecutar `07_payment_reports.sql` después de crear las tablas
+del sistema y la tabla `pagos`.
+
+### Autor
+
+Nestor Santiago Cobos Manrique
+
+Proyecto: Sistema de Reservas de Salones
+Eventos Premier S.A.S.
+
+Tecnología: MySQL 8.0+, SQL e InnoDB.
+
